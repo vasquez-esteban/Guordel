@@ -11766,7 +11766,6 @@ cojonudo
 cojudez
 cojudo
 cojuelo
-'cola
 cola
 colacion
 colada
@@ -18260,7 +18259,6 @@ fermi
 fermio
 fermion
 fermoso
-'fero
 ferodo
 feroz
 ferr
@@ -18350,7 +18348,6 @@ ficha
 fichaje
 fichar
 fichero
-'fico
 ficoideo
 ficticio
 fictivo
@@ -18720,7 +18717,6 @@ fluxion
 fluyente
 fobia
 fobico
-'fobo
 foca
 focal
 focense
@@ -18896,7 +18892,6 @@ fornicio
 fornido
 fornir
 forno
-'foro
 foro
 forofo
 forqueta
@@ -19240,7 +19235,6 @@ fugible
 fugido
 fugir
 fugitivo
-'fugo
 fuidizo
 fuina
 fuir
@@ -19989,7 +19983,6 @@ genitor
 genitura
 geniudo
 genizaro
-'geno
 geno
 genocida
 genol
@@ -20283,7 +20276,6 @@ gonete
 gonfalon
 gong
 gongo
-'gono
 gonococo
 gonorrea
 gorbion
@@ -20385,7 +20377,6 @@ graderia
 graderio
 gradilla
 gradiolo
-'grado
 grado
 gradoso
 graduado
@@ -20402,7 +20393,6 @@ grafio
 grafismo
 grafista
 grafito
-'grafo
 grafo
 grafo
 gragea
@@ -24657,7 +24647,6 @@ lisiado
 lisiar
 lisina
 lision
-'lisis
 lisis
 lisis
 lislique
@@ -24893,7 +24882,6 @@ logical
 logico
 logis
 logista
-'logo
 logopeda
 logos
 logotipo
@@ -25795,7 +25783,6 @@ manjua
 manjuari
 manlevar
 manlieva
-'mano
 mano
 maño
 manobre
@@ -26752,7 +26739,6 @@ metrica
 metrico
 metrista
 metritis
-'metro
 metro
 mexicano
 Mexico
@@ -30177,7 +30163,6 @@ parlon
 parloteo
 parnaso
 parne
-'paro
 paro
 parodia
 parodiar
@@ -39022,7 +39007,6 @@ tibor
 tiburon
 ticera
 ticero
-'tico
 tico
 ticonico
 tictac
@@ -40216,7 +40200,6 @@ trocola
 trofeo
 trofia
 trofico
-'trofo
 troica
 troj
 troja
@@ -41857,7 +41840,6 @@ vorace
 voragine
 voraz
 vormela
-'voro
 vortice
 vosear
 voseo

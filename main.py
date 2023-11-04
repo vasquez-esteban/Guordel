@@ -1,9 +1,9 @@
-# Requerimientos:
+from res.lemario import set_palabras_validas
+from res.palabras_escogidas import set_palabras_escogidas
 
-# Tener un lemario
-# 4-8 Palabras
+# Archivo para correr el juego
 # Se pueden jugar varias partidas
-# La interfaz debe mostrar la cantidad de aciertos y fallos cada partida
-# Cada partida termina si los intentos son iguales a seis y no se adivina o si se adivina
-# Abre el archivo de origen en modo lectura
-# Abre el archivo de texto en modo lectura
+
+if __name__ == '__main__':
+    print(set_palabras_validas)
+    print(set_palabras_escogidas)
