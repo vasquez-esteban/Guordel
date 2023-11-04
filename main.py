@@ -1,9 +1,7 @@
+import random
 from Guordel import Guordel
 from res.lemario import set_palabras_validas
 from res.palabras_escogidas import set_palabras_escogidas
-
-# Archivo para correr el juego. Contiene los sets de palabras necesitados
-# Se pueden jugar varias partidas
 
 
 def print_yellow(text):
@@ -14,41 +12,57 @@ def print_green(text):
     return print(f"\033[32m{text}\033[0m")
 
 
-if __name__ == '__main__':
-    juego = Guordel(5)
-    jugando = True
+def jugar():
+    juego = Guordel(4)
 
     print("GUORDEL")
     intentos = 0
+    palabra_oculta = get_palabra_random(juego.dificultad)
 
-    # Se puede poner dentro de una función única
     while intentos < 6:
-        # Se debe obtener una palabra de set_palabras_escogidas (todas están en mayúsculas)
-        ejemplo = 'MELON'
         adivina = input("Adivine la respuesta: ").upper()
 
-        # Verificar longitudes adecuadas
-        if not (len(adivina) == len(ejemplo)):
-            print("No ingresó una longitud válida de palabra")
+        if not es_valida(adivina, palabra_oculta):
+            print("No ingresó una palabra válida")
             continue
 
-        # Comprobar adivinanza y revelar letras correctas
-        if adivina == ejemplo:
+        if adivina == palabra_oculta:
             print('PALABRA ADIVINADA!')
-            print_green(ejemplo)
+            print_green(palabra_oculta)
             break
 
-        resultado = list()
+        mostrar_resultado_adivinar(palabra_oculta, adivina)
 
-        for indice in range(len(ejemplo)):
-            if ejemplo[indice] == adivina[indice]:
-                resultado.append(f"\033[32m{ejemplo[indice]}\033[0m")
-            else:
-                if adivina[indice] in ejemplo:
-                    resultado.append(f"\033[33m{adivina[indice]}\033[0m")
-                else:
-                    resultado.append(adivina[indice])
-
-        print("".join(resultado))
-        # Controlar los intentos del jugador
         intentos += 1
+
+    else:
+        print(f"la palabra oculta era: {palabra_oculta}")
+
+
+def get_palabra_random(longitud_palabra):
+    list_palabras_escogidas = list(set_palabras_escogidas)
+    filtradas = [word for word in list_palabras_escogidas if len(word) == longitud_palabra]
+    return random.choice(filtradas)
+
+
+def es_valida(adivina, palabra_oculta):
+    return (len(adivina) == len(palabra_oculta)) and (adivina in set_palabras_validas)
+
+
+def mostrar_resultado_adivinar(palabra_oculta, adivina):
+    resultado = []
+
+    for indice in range(len(palabra_oculta)):
+        if palabra_oculta[indice] == adivina[indice]:
+            resultado.append(f"\033[32m{palabra_oculta[indice]}\033[0m")
+        else:
+            if adivina[indice] in palabra_oculta:
+                resultado.append(f"\033[33m{adivina[indice]}\033[0m")
+            else:
+                resultado.append(adivina[indice])
+
+    print("".join(resultado))
+
+
+if __name__ == '__main__':
+    jugar()
