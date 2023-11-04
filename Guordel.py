@@ -22,6 +22,10 @@ class Guordel:
         self.adivino_palabra = False
         self.set_palabra_oculta(self.palabras_escogidas)
 
-    def set_palabra_oculta(self, lista_palabras_posibles):
+    def set_palabra_oculta(self, set_palabras_escogidas):
         """Selecciona una palabra aleatoria de self.palabras_escogidas"""
         pass
+
+    def adivinar(self, palabra_adivinada):
+        pass
+
