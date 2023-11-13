@@ -3,6 +3,13 @@ from Guordel import Guordel
 from res.lemario import set_palabras_validas
 from res.palabras_escogidas import set_palabras_escogidas
 
+import pygame
+from pygame.locals import *
+from Boton import Boton
+from BotonSeleccion import BotonSeleccion
+from Cuadricula import Cuadricula
+
+
 
 def print_yellow(text):
     return print(f"\033[33m{text}\033[0m")
@@ -12,8 +19,8 @@ def print_green(text):
     return print(f"\033[32m{text}\033[0m")
 
 
-def jugar():
-    juego = Guordel(4)
+def jugar(dificultad):
+    juego = Guordel(dificultad)
 
     print("GUORDEL")
     intentos = 0
@@ -65,4 +72,59 @@ def mostrar_resultado_adivinar(palabra_oculta, adivina):
 
 
 if __name__ == '__main__':
-    jugar()
+
+    pygame.init()
+    font = pygame.font.SysFont('Constantia', 32)
+    
+    cuadricula = Cuadricula()
+
+    pantalla = pygame.display.set_mode((cuadricula.ancho, cuadricula.largo))
+    reloj = pygame.time.Clock()
+
+    game_menu = True
+
+    boton_inicio = Boton(260, 400, 2,texto= "Empezar a jugar")
+    seleccion_dificultad = BotonSeleccion(310, 300, 2, 3, "4","5","6")
+
+    dificultad = None
+
+    SCREEN_UPDATE = pygame.USEREVENT
+    pygame.time.set_timer(SCREEN_UPDATE, 150)
+
+    while True:
+                # Ciclo principal del juego
+        for event in pygame.event.get():
+
+            # Salir del juego
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+        #fondo de pantalla
+        pantalla.fill(cuadricula.color)
+
+        
+
+        if game_menu:
+            # Si se da al botón de empezar, se inicia el juego
+
+            #Titulo
+            texto = font.render("GUORDEL", True,(0,0,0))
+            textoRect = texto.get_rect()
+            textoRect.topleft = (290, 200)
+            pantalla.blit(texto, textoRect)
+
+            dificultad = seleccion_dificultad.draw(pantalla, dificultad)
+            
+
+            if boton_inicio.draw(pantalla):
+                game_menu = False
+            pygame.display.update()
+            # El menu se actualiza a 60 fps
+            reloj.tick(60)
+
+        if not game_menu:
+            jugar(int(dificultad))
+
+        reloj.tick(24)
+    
