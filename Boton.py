@@ -10,7 +10,7 @@ class Boton:
     color_texto = (0,0,0)
     boton_no_presionado = (116, 111, 140)
     boton_hovered = (116, 111, 130)
-    boton_presionado = (116, 101, 140)
+    
 
 
 
@@ -75,8 +75,7 @@ class Boton:
             if pygame.mouse.get_pressed()[0] == 1 and not self.presionado:
                 
                 self.presionado = True
-                accion = True
-                
+                accion = True       
         else:
             self.color_de_boton = self.boton_no_presionado
         

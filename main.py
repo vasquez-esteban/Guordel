@@ -6,6 +6,7 @@ from res.palabras_escogidas import set_palabras_escogidas
 import pygame
 from pygame.locals import *
 from Boton import Boton
+from BotonSeleccion import BotonSeleccion
 from Cuadricula import Cuadricula
 
 
@@ -83,7 +84,9 @@ if __name__ == '__main__':
     game_menu = True
 
     boton_inicio = Boton(260, 400, 2,texto= "Empezar a jugar")
-   
+    seleccion_dificultad = BotonSeleccion(310, 300, 2, 3, "4","5","6")
+
+    dificultad = None
 
     SCREEN_UPDATE = pygame.USEREVENT
     pygame.time.set_timer(SCREEN_UPDATE, 150)
@@ -100,13 +103,19 @@ if __name__ == '__main__':
         #fondo de pantalla
         pantalla.fill(cuadricula.color)
 
+        
+
         if game_menu:
             # Si se da al botón de empezar, se inicia el juego
+
+            #Titulo
             texto = font.render("GUORDEL", True,(0,0,0))
             textoRect = texto.get_rect()
             textoRect.topleft = (290, 200)
-
             pantalla.blit(texto, textoRect)
+
+            dificultad = seleccion_dificultad.draw(pantalla, dificultad)
+            
 
             if boton_inicio.draw(pantalla):
                 game_menu = False
@@ -115,6 +124,7 @@ if __name__ == '__main__':
             reloj.tick(60)
 
         if not game_menu:
-            pass
+            jugar(int(dificultad))
 
-    #jugar()
+        reloj.tick(24)
+    
