@@ -2,9 +2,12 @@ import random
 from Guordel import Guordel
 from res.lemario import set_palabras_validas
 from res.palabras_escogidas import set_palabras_escogidas
+
 import pygame
+from pygame.locals import *
 from Boton import Boton
 from Cuadricula import Cuadricula
+
 
 
 def print_yellow(text):
@@ -15,8 +18,8 @@ def print_green(text):
     return print(f"\033[32m{text}\033[0m")
 
 
-def jugar():
-    juego = Guordel(4)
+def jugar(dificultad):
+    juego = Guordel(dificultad)
 
     print("GUORDEL")
     intentos = 0
@@ -70,6 +73,8 @@ def mostrar_resultado_adivinar(palabra_oculta, adivina):
 if __name__ == '__main__':
 
     pygame.init()
+    font = pygame.font.SysFont('Constantia', 32)
+    
     cuadricula = Cuadricula()
 
     pantalla = pygame.display.set_mode((cuadricula.ancho, cuadricula.largo))
@@ -77,7 +82,8 @@ if __name__ == '__main__':
 
     game_menu = True
 
-    boton_inicio = Boton(24,4,2,texto= "Buenos días alegría")
+    boton_inicio = Boton(260, 400, 2,texto= "Empezar a jugar")
+   
 
     SCREEN_UPDATE = pygame.USEREVENT
     pygame.time.set_timer(SCREEN_UPDATE, 150)
@@ -96,6 +102,12 @@ if __name__ == '__main__':
 
         if game_menu:
             # Si se da al botón de empezar, se inicia el juego
+            texto = font.render("GUORDEL", True,(0,0,0))
+            textoRect = texto.get_rect()
+            textoRect.topleft = (290, 200)
+
+            pantalla.blit(texto, textoRect)
+
             if boton_inicio.draw(pantalla):
                 game_menu = False
             pygame.display.update()

@@ -14,6 +14,10 @@ class Boton:
 
 
 
+#constructor -> args: se usa para agregar un tamaño especifico al botón (ingresa dos valores para ancho y después largo)
+#constructor -> kwargs["imagen"]: si en el constructor escribes imagen= el botón va a ser la imagen que le agregues al parametro
+#constructor -> kwargs["texto"]: si escribes texto= el botón va a contener el texto que le ingreses
+
     def __init__(self, x, y, escala,*args, **kwargs):
         """
         Crea un botón interactivo en una ventana de Pygame
@@ -21,6 +25,8 @@ class Boton:
         """
         self.x = x
         self.y = y
+        
+        # Para manejar el evento de un click
         self.presionado = False
         self.escala = escala
         
@@ -34,15 +40,15 @@ class Boton:
             self.rect.topleft = (x, y)
         else: 
             self.imagen = False
-
+        #Este fue mi intento de que se viera bien con palabras cortas y largas, medio funciona
         if "texto" in kwargs:
-            self.ancho = args[0] if args else len(kwargs["texto"]*8)*escala
+            self.ancho = args[0] if args else len(kwargs["texto"])*8*escala + 8/len(kwargs["texto"])
             self.altura = args[1] if args else 20*escala
             self.texto = kwargs["texto"]
             self.rect = Rect(x,y, self.ancho, self.altura)
         else:
             self.imagen = False
-        # Para manejar el evento de un click
+        
         
 
 
