@@ -8,7 +8,7 @@ class Opcion:
     color_texto = (0,0,0)
     boton_no_presionado = (116, 111, 140)
     boton_hovered = (116, 111, 230)
-    boton_presionado = (116, 101, 140)
+    boton_presionado = (150, 101, 140)
 
     def __init__(self, meta_x, meta_y, ancho, altura, texto, rect):
         self.meta_x = meta_x
@@ -55,15 +55,6 @@ class BotonSeleccion:
             inicio += ancho + 10
         
         
-    
-        
-        
-
-
-    
-
-        
-
     def draw(self, surface, varObjetivo):
         """Dibuja el botón en una superficie y maneja eventos de clic."""
 
@@ -77,7 +68,7 @@ class BotonSeleccion:
 
         
 
-        # Si el botón es presionado dentro de su rectángulo, inicia el juego
+        # Si una de las opciones es tocada por el cursor, cambia de color, si es presionado se cambia la dificultad 
         for opcion in self.opciones:
             objeto = self.opciones[opcion]
             if objeto.rect.collidepoint(pos):
