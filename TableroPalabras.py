@@ -60,7 +60,6 @@ class TableroPalabras():
                 if indx_letra == len(self.palabras[indx_palabra]):
                     letras_por_completar = False
                     continue
-                print(self.palabras[indx_palabra][indx_letra], indx_palabra, indx_letra)
                 imagen_texto = font.render(self.palabras[indx_palabra][indx_letra], True, self.color_texto)
                 superficie.blit(imagen_texto, (celda.x + celda.width // (2*self.escala), celda.y + celda.height // (2*self.escala)))
                 indx_letra +=1

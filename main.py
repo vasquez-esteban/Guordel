@@ -9,6 +9,8 @@ from Boton import Boton
 from BotonSeleccion import BotonSeleccion
 from Cuadricula import Cuadricula
 
+from TableroPalabras import TableroPalabras
+
 
 
 def print_yellow(text):
@@ -84,7 +86,9 @@ if __name__ == '__main__':
     game_menu = True
 
     boton_inicio = Boton(260, 400, 2,texto= "Empezar a jugar")
+    otro_boton = Boton(500, 400, 2,texto= "Recibir por consola")
     seleccion_dificultad = BotonSeleccion(310, 300, 2, 3, "4","5","6")
+    
 
     dificultad = None
 
@@ -119,12 +123,37 @@ if __name__ == '__main__':
 
             if boton_inicio.draw(pantalla):
                 game_menu = False
-            pygame.display.update()
-            # El menu se actualiza a 60 fps
-            reloj.tick(60)
+                tablero_de_palabras = TableroPalabras(200, 100, 2, dificultad)
+                recibir = True
+           
 
         if not game_menu:
-            jugar(int(dificultad))
+            #jugar(int(dificultad))
+            
+            tablero_de_palabras.dibujar_tablero(pantalla, True)
+            #Cuando esté habilitado escribir por consola utilizas los comandos "a","f","b","d"
+            if recibir:
+            
+                accion = input().split()
+                #prefijo "a" para agregar una letra
+                if accion[0] == "a":
+                    tablero_de_palabras.agregar_letra(accion[1])
+                #cambiar a vizualizazión del juego
+                if accion[0] == "f":
+                    recibir = False
+                #equivalente a Enter
+                if accion[0] == "b":
+                    #regresa la palabra si cumple con el tamaño establecido
+                    print(tablero_de_palabras.confirmar_palabra())
+                #delete
+                if accion[0] == "d":
+                    tablero_de_palabras.eliminar_letra()
+            
+            if otro_boton.draw(pantalla):
+                recibir = True
+                
+        
+        pygame.display.update()
 
-        reloj.tick(24)
+        reloj.tick(9)
     
