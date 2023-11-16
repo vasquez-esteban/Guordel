@@ -28,4 +28,3 @@ class Guordel:
 
     def adivinar(self, palabra_adivinada):
         pass
-
