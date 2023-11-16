@@ -11,41 +11,6 @@ from Cuadricula import Cuadricula
 from TableroPalabras import TableroPalabras
 
 
-def print_yellow(text):
-    return print(f"\033[33m{text}\033[0m")
-
-
-def print_green(text):
-    return print(f"\033[32m{text}\033[0m")
-
-
-def jugar(dificultad):
-    juego = Guordel(dificultad)
-
-    print("GUORDEL")
-    intentos = 0
-    palabra_oculta = get_palabra_random(juego.dificultad)
-
-    while intentos < 6:
-        adivina = input("Adivine la respuesta: ").upper()
-
-        if not es_valida(adivina, palabra_oculta):
-            print("No ingresó una palabra válida")
-            continue
-
-        if adivina == palabra_oculta:
-            print("PALABRA ADIVINADA!")
-            print_green(palabra_oculta)
-            break
-
-        mostrar_resultado_adivinar(palabra_oculta, adivina)
-
-        intentos += 1
-
-    else:
-        print(f"la palabra oculta era: {palabra_oculta}")
-
-
 def get_palabra_random(longitud_palabra):
     list_palabras_escogidas = list(set_palabras_escogidas)
     filtradas = [
@@ -60,8 +25,7 @@ def es_valida(adivina, palabra_oculta):
 
 
 def mostrar_resultado_adivinar(palabra_oculta, adivina, dificultad):
-    # resultado = []
-
+    
     reps_letras = {}
     for indice in range(len(palabra_oculta)):
         if adivina[indice] not in reps_letras:
@@ -79,39 +43,46 @@ def mostrar_resultado_adivinar(palabra_oculta, adivina, dificultad):
                     dificultad * (tablero.n_palabras_completadas - 1) + indice
                 ].color = tablero.color_letra_en_palabra
                 reps_letras[adivina[indice]] -= 1
-                # resultado.append(f"\033[33m{adivina[indice]}\033[0m")
-            # else:
-            # resultado.append(adivina[indice])
-
-    # print("".join(resultado))
+                
 
 
-def comparar_palabras(palabra_valida, palabra_oculta, dificultad, tablero):
+def comparar_palabras(palabra_valida, palabra_oculta, dificultad, tablero, ganados, perdidos):
+
     if palabra_valida == False:
-        # print(len(palabra_oculta)," ->", palabra_oculta)
-
-        print("a mimir")
+        pass
+        
     elif palabra_valida == palabra_oculta:
         tablero.resultado_juego = True
+        ganados +=1
 
-    else:
+    elif palabra_valida != palabra_oculta and tablero.n_palabras_completadas == 6:
+        tablero.resultado_juego = False
+        perdidos +=1
+
+    elif palabra_valida != palabra_oculta and tablero.n_palabras_completadas < 6:
         mostrar_resultado_adivinar(palabra_oculta, palabra_valida, dificultad)
 
 
 if __name__ == "__main__":
+
     pygame.init()
+
     font = pygame.font.SysFont("Constantia", 32)
 
     cuadricula = Cuadricula()
 
     pantalla = pygame.display.set_mode((cuadricula.ancho, cuadricula.largo))
+
     reloj = pygame.time.Clock()
 
     game_menu = True
 
     boton_inicio = Boton(260, 400, 2, texto="Empezar a jugar")
-    otro_boton = Boton(500, 400, 2, texto="Recibir por consola")
+    
     seleccion_dificultad = BotonSeleccion(310, 300, 2, 5, "4", "5", "6", "7", "8")
+
+    juegos_perdidos = 0
+    juegos_ganados = 0
 
     teclas_qwerty = [
         ("Q", 50, 450),
@@ -165,25 +136,27 @@ if __name__ == "__main__":
                 pygame.quit()
                 exit()
             if not game_menu:
-                if evento.type == pygame.MOUSEBUTTONDOWN:
-                    if evento.button == 1:  # Botón izquierdo del ratón
-                        for tecla, x, y in teclas_qwerty:
-                            rect = pygame.Rect(x, y - 100, 60, 60)
-                            if rect.collidepoint(evento.pos):
-                                if tecla == "Borrar":
-                                    tablero.eliminar_letra()  # Eliminar letra del tablero
-                                    colores_teclas[tecla] = AZUL_CLARO
-                                elif tecla == "Enter":
-                                    palabra_valida = tablero.confirmar_palabra()
-                                    comparar_palabras(
-                                        palabra_valida,
-                                        palabra_oculta,
-                                        juego.dificultad,
-                                        tablero,
-                                    )
-                                else:
-                                    colores_teclas[tecla] = AZUL_CLARO
-                                    tablero.agregar_letra(tecla)
+                if evento.type == pygame.MOUSEBUTTONDOWN and evento.button == 1:
+                    # Botón izquierdo del ratón
+                    for tecla, x, y in teclas_qwerty:
+                        rect = pygame.Rect(x, y - 100, 60, 60)
+                        if rect.collidepoint(evento.pos):
+                            if tecla == "Borrar":
+                                tablero.eliminar_letra()  # Eliminar letra del tablero
+                                colores_teclas[tecla] = AZUL_CLARO
+                            elif tecla == "Enter":
+                                palabra_valida = tablero.confirmar_palabra()
+                                comparar_palabras(
+                                    palabra_valida,
+                                    palabra_oculta,
+                                    int(dificultad),
+                                    tablero,
+                                    juegos_ganados,
+                                    juegos_perdidos
+                                )
+                            else:
+                                colores_teclas[tecla] = AZUL_CLARO
+                                tablero.agregar_letra(tecla)
 
                 elif evento.type == pygame.KEYDOWN:
                     tecla = pygame.key.name(evento.key)
@@ -194,7 +167,7 @@ if __name__ == "__main__":
                     elif evento.key == K_RETURN:
                         palabra_valida = tablero.confirmar_palabra()
                         comparar_palabras(
-                            palabra_valida, palabra_oculta, juego.dificultad, tablero
+                            palabra_valida, palabra_oculta, int(dificultad), tablero, juegos_ganados, juegos_perdidos
                         )
 
         # fondo de pantalla
@@ -216,13 +189,14 @@ if __name__ == "__main__":
                 tablero = TableroPalabras(
                     x=cuadricula.ancho // 4, y=50, escala=2, longitud_palabra=dificultad
                 )
-                juego = Guordel(int(dificultad))
-                palabra_oculta = get_palabra_random(juego.dificultad)
-                recibir = True
+                
+                palabra_oculta = get_palabra_random(int(dificultad))
+              
 
         if not game_menu:
-            # jugar(int(dificultad))
+       
             tablero.dibujar_tablero(pantalla, True)
+
             for tecla, x, y in teclas_qwerty:
                 if tecla == "Borrar":
                     rect = pygame.Rect(x - 5, y - 100, 70, 50)
@@ -236,20 +210,41 @@ if __name__ == "__main__":
                 texto = fuente.render(tecla, True, BLANCO)
                 text_rect = texto.get_rect(center=(rect.centerx, rect.centery))
                 pantalla.blit(texto, text_rect)
-            if (
-                pygame.mouse.get_pressed()[0] == 0
-            ):  # Si no se está presionando el botón izquierdo
+            if (pygame.mouse.get_pressed()[0] == 0):  
+            # Si no se está presionando el botón izquierdo
                 for tecla in colores_teclas:
                     colores_teclas[tecla] = AZUL
 
-            if tablero.resultado_juego:
+            if tablero.resultado_juego == True:
                 rect = Rect(200, 200, 400, 200)
                 pygame.draw.rect(pantalla, (0, 0, 0), rect, border_radius=3)
                 fuente = pygame.font.SysFont("calibri", 26)
                 texto = fuente.render("GANASTE", True, BLANCO)
                 text_rect = texto.get_rect(center=(rect.centerx, rect.centery - 27))
                 texto_fallos = fuente.render(
-                    f"Intentos fallidos: {tablero.n_palabras_completadas-1}",
+                    f"Partidas ganadas: {juegos_ganados}\nPartidas perdidas: {juegos_perdidos}\nIntentos fallidos: {tablero.n_palabras_completadas}",
+                    True,
+                    BLANCO,
+                )
+                text_rect_fallos = texto.get_rect(
+                    center=(rect.centerx - 20, rect.centery)
+                )
+
+                pantalla.blit(texto, text_rect)
+                pantalla.blit(texto_fallos, text_rect_fallos)
+
+                boton_reinicio = Boton(300, 350, 2, texto="Volver a jugar")
+                if boton_reinicio.draw(pantalla):
+                    game_menu = True
+            
+            if tablero.resultado_juego == False:
+                rect = Rect(200, 200, 400, 200)
+                pygame.draw.rect(pantalla, (0, 0, 0), rect, border_radius=3)
+                fuente = pygame.font.SysFont("calibri", 26)
+                texto = fuente.render("PERDISTE", True, BLANCO)
+                text_rect = texto.get_rect(center=(rect.centerx, rect.centery - 27))
+                texto_fallos = fuente.render(
+                    f"Palabra correcta: {palabra_oculta}\nPartidas ganadas: {juegos_ganados}\nPartidas perdidas: {juegos_perdidos}",
                     True,
                     BLANCO,
                 )
