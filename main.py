@@ -135,7 +135,7 @@ if __name__ == "__main__":
             if evento.type == pygame.QUIT:
                 pygame.quit()
                 exit()
-            if not game_menu:
+            if not game_menu  and tablero.resultado_juego == None:
                 if evento.type == pygame.MOUSEBUTTONDOWN and evento.button == 1:
                     # Botón izquierdo del ratón
                     for tecla, x, y in teclas_qwerty:
@@ -154,11 +154,12 @@ if __name__ == "__main__":
                                     juegos_ganados,
                                     juegos_perdidos
                                 )
+                                cuadricula.color = cuadricula.color_incorrecto if palabra_valida == False else cuadricula.color_correcto
                             else:
                                 colores_teclas[tecla] = AZUL_CLARO
                                 tablero.agregar_letra(tecla)
 
-                elif evento.type == pygame.KEYDOWN:
+                elif evento.type == pygame.KEYDOWN  and tablero.resultado_juego == None:
                     tecla = pygame.key.name(evento.key)
                     if len(tecla) == 1 and tecla.isalpha():
                         tablero.agregar_letra(tecla.upper())
@@ -169,9 +170,11 @@ if __name__ == "__main__":
                         comparar_palabras(
                             palabra_valida, palabra_oculta, int(dificultad), tablero, juegos_ganados, juegos_perdidos
                         )
+                        cuadricula.color = cuadricula.color_incorrecto if palabra_valida == False else cuadricula.color_correcto
 
         # fondo de pantalla
         pantalla.fill(cuadricula.color)
+        cuadricula.color = cuadricula.color_defecto
 
         if game_menu:
             # Si se da al botón de empezar, se inicia el juego
@@ -219,19 +222,17 @@ if __name__ == "__main__":
                 rect = Rect(200, 200, 400, 200)
                 pygame.draw.rect(pantalla, (0, 0, 0), rect, border_radius=3)
                 fuente = pygame.font.SysFont("calibri", 26)
-                texto = fuente.render("GANASTE", True, BLANCO)
-                text_rect = texto.get_rect(center=(rect.centerx, rect.centery - 27))
-                texto_fallos = fuente.render(
-                    f"Partidas ganadas: {juegos_ganados}\nPartidas perdidas: {juegos_perdidos}\nIntentos fallidos: {tablero.n_palabras_completadas}",
-                    True,
-                    BLANCO,
-                )
-                text_rect_fallos = texto.get_rect(
-                    center=(rect.centerx - 20, rect.centery)
-                )
-
-                pantalla.blit(texto, text_rect)
-                pantalla.blit(texto_fallos, text_rect_fallos)
+                
+                info_partida = f"Partidas ganadas: {juegos_ganados}\nPartidas perdidas: {juegos_perdidos}\nIntentos fallidos: {tablero.n_palabras_completadas}"
+                info_partida = info_partida.split("\n")
+                renglon = 0
+                for frase in info_partida:
+                    texto = fuente.render(frase, True, BLANCO)
+                    text_rect = texto.get_rect(center=(rect.centerx, rect.centery - 27 + renglon))
+                    pantalla.blit(texto, text_rect)
+                    renglon += 17
+                
+                
 
                 boton_reinicio = Boton(300, 350, 2, texto="Volver a jugar")
                 if boton_reinicio.draw(pantalla):
