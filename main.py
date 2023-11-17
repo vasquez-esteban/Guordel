@@ -25,35 +25,38 @@ def es_valida(adivina, palabra_oculta):
 
 
 def mostrar_resultado_adivinar(palabra_oculta, adivina, dificultad):
-    
+    print(palabra_oculta)
     reps_letras = {}
-    for indice in range(len(palabra_oculta)):
-        if adivina[indice] not in reps_letras:
-            reps_letras[adivina[indice]] = palabra_oculta.count(adivina[indice])
 
+    for letra in palabra_oculta:
+        if letra not in reps_letras:
+            reps_letras[letra] = palabra_oculta.count(letra)
+            
+    for indice in range(len(palabra_oculta)):
         if palabra_oculta[indice] == adivina[indice]:
             # resultado.append(f"\033[32m{palabra_oculta[indice]}\033[0m")
             tablero.celdas_de_letras[
                 dificultad * (tablero.n_palabras_completadas - 1) + indice
             ].color = tablero.color_letra_correcta
             reps_letras[adivina[indice]] -= 1
-        else:
-            if reps_letras[adivina[indice]] > 0:
-                tablero.celdas_de_letras[
-                    dificultad * (tablero.n_palabras_completadas - 1) + indice
-                ].color = tablero.color_letra_en_palabra
-                reps_letras[adivina[indice]] -= 1
-                
+   
+        elif adivina[indice] in reps_letras and adivina.count(adivina[indice]) == reps_letras[adivina[indice]]:
+            tablero.celdas_de_letras[
+                dificultad * (tablero.n_palabras_completadas - 1) + indice
+            ].color = tablero.color_letra_en_palabra
+            reps_letras[adivina[indice]] -= 1
+            
 
 
 def comparar_palabras(palabra_valida, palabra_oculta, dificultad, tablero, ganados, perdidos):
-
+   
     if palabra_valida == False:
         pass
         
     elif palabra_valida == palabra_oculta:
         tablero.resultado_juego = True
         ganados +=1
+        
 
     elif palabra_valida != palabra_oculta and tablero.n_palabras_completadas == 6:
         tablero.resultado_juego = False
@@ -61,6 +64,8 @@ def comparar_palabras(palabra_valida, palabra_oculta, dificultad, tablero, ganad
 
     elif palabra_valida != palabra_oculta and tablero.n_palabras_completadas < 6:
         mostrar_resultado_adivinar(palabra_oculta, palabra_valida, dificultad)
+    print(ganados, perdidos)
+    return ganados, perdidos
 
 
 if __name__ == "__main__":
@@ -79,7 +84,7 @@ if __name__ == "__main__":
 
     boton_inicio = Boton(260, 400, 2, texto="Empezar a jugar")
     
-    seleccion_dificultad = BotonSeleccion(310, 300, 2, 5, "4", "5", "6", "7", "8")
+    seleccion_dificultad = BotonSeleccion(290, 300, 2, 5, "4", "5", "6", "7", "8")
 
     juegos_perdidos = 0
     juegos_ganados = 0
@@ -146,7 +151,7 @@ if __name__ == "__main__":
                                 colores_teclas[tecla] = AZUL_CLARO
                             elif tecla == "Enter":
                                 palabra_valida = tablero.confirmar_palabra()
-                                comparar_palabras(
+                                juegos_ganados, juegos_perdidos = comparar_palabras(
                                     palabra_valida,
                                     palabra_oculta,
                                     int(dificultad),
@@ -167,7 +172,7 @@ if __name__ == "__main__":
                         tablero.eliminar_letra()
                     elif evento.key == K_RETURN:
                         palabra_valida = tablero.confirmar_palabra()
-                        comparar_palabras(
+                        juegos_ganados, juegos_perdidos = comparar_palabras(
                             palabra_valida, palabra_oculta, int(dificultad), tablero, juegos_ganados, juegos_perdidos
                         )
                         cuadricula.color = cuadricula.color_incorrecto if palabra_valida == False else cuadricula.color_correcto
@@ -223,14 +228,14 @@ if __name__ == "__main__":
                 pygame.draw.rect(pantalla, (0, 0, 0), rect, border_radius=3)
                 fuente = pygame.font.SysFont("calibri", 26)
                 
-                info_partida = f"Partidas ganadas: {juegos_ganados}\nPartidas perdidas: {juegos_perdidos}\nIntentos fallidos: {tablero.n_palabras_completadas}"
+                info_partida = f"GANASTE\nPartidas ganadas: {juegos_ganados}\nPartidas perdidas: {juegos_perdidos}\nIntentos fallidos: {tablero.n_palabras_completadas-1}"
                 info_partida = info_partida.split("\n")
                 renglon = 0
                 for frase in info_partida:
                     texto = fuente.render(frase, True, BLANCO)
-                    text_rect = texto.get_rect(center=(rect.centerx, rect.centery - 27 + renglon))
+                    text_rect = texto.get_rect(center=(rect.centerx, rect.centery - 40 + renglon))
                     pantalla.blit(texto, text_rect)
-                    renglon += 17
+                    renglon += 25
                 
                 
 
@@ -242,19 +247,15 @@ if __name__ == "__main__":
                 rect = Rect(200, 200, 400, 200)
                 pygame.draw.rect(pantalla, (0, 0, 0), rect, border_radius=3)
                 fuente = pygame.font.SysFont("calibri", 26)
-                texto = fuente.render("PERDISTE", True, BLANCO)
-                text_rect = texto.get_rect(center=(rect.centerx, rect.centery - 27))
-                texto_fallos = fuente.render(
-                    f"Palabra correcta: {palabra_oculta}\nPartidas ganadas: {juegos_ganados}\nPartidas perdidas: {juegos_perdidos}",
-                    True,
-                    BLANCO,
-                )
-                text_rect_fallos = texto.get_rect(
-                    center=(rect.centerx - 20, rect.centery)
-                )
-
-                pantalla.blit(texto, text_rect)
-                pantalla.blit(texto_fallos, text_rect_fallos)
+                info_partida = f"PERDISTE\nPalabra correcta: {palabra_oculta}\nPartidas ganadas: {juegos_ganados}\nPartidas perdidas: {juegos_perdidos}"
+                info_partida = info_partida.split("\n")
+                renglon = 0
+                for frase in info_partida:
+                    texto = fuente.render(frase, True, BLANCO)
+                    text_rect = texto.get_rect(center=(rect.centerx, rect.centery - 40 + renglon))
+                    pantalla.blit(texto, text_rect)
+                    renglon += 25
+                
 
                 boton_reinicio = Boton(300, 350, 2, texto="Volver a jugar")
                 if boton_reinicio.draw(pantalla):
